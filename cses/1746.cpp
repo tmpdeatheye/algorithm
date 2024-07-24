@@ -8,90 +8,45 @@ typedef int64_t i64;
 #define MOD 1000000007
 
 i32 t, n, m;
-i64 result = 1;
 
 void solve() {
     cin >> n >> m;
-    vector<i32> value(n);
+    vector<i32> a(n);
     for (i32 i = 0; i < n; ++i) {
-        cin >> value[i];
+        cin >> a[i];
     }
-    unordered_map<i32, i32> one, two;
-    for (i32 i = 0; i < n; ++i) {
-        if (value[i] == 0) {
-            if (i == 0) {
-                for (i32 j = 1; j <= m; ++j) {
-                    one[j] += 1;
-                    one[j] %= MOD;
+    vector<vector<i64>> dp(n, vector<i64>(m + 1, 0));
+    if (a[0] == 0) {
+        fill(dp[0].begin(), dp[0].end(), 1);
+    } else {
+        dp[0][a[0]] = 1;
+    }
+    for (i32 i = 1; i < n; ++i) {
+        if (a[i] == 0) {
+            for (i32 j = 1; j <= m; ++j) {
+                dp[i][j] += dp[i - 1][j];
+                if (j - 1 >= 1) {
+                    dp[i][j] += dp[i - 1][j - 1];
                 }
-            } else {
-                if (value[i - 1] == 0) {
-                    two.clear();
-                    for (auto [k, v]: one) {
-                        if (1 <= k - 1 && k - 1 <= m) {
-                            two[k - 1] += v;
-                            two[k - 1] %= MOD;
-                        }
-                        if (1 <= k && k <= m) {
-                            two[k] += v;
-                            two[k] %= MOD;
-                        }
-                        if (1 <= k + 1 && k + 1 <= m) {
-                            two[k + 1] += v;
-                            two[k + 1] %= MOD;
-                        }
-                    }
-                    one = two;
-                } else {
-                    if (1 <= value[i - 1] - 1 && value[i - 1] - 1 <= m) {
-                        one[value[i - 1] - 1] += 1;
-                        one[value[i - 1] - 1] %= MOD;
-                    }
-                    if (1 <= value[i - 1] && value[i - 1] <= m) {
-                        ++one[value[i - 1]];
-                        one[value[i - 1]] %= MOD;
-                    }
-                    if (1 <= value[i - 1] + 1 && value[i - 1] + 1 <= m) {
-                        ++one[value[i - 1] + 1];
-                        one[value[i - 1]] %= MOD;
-                    }
+                if (j + 1 <= m) {
+                    dp[i][j] += dp[i - 1][j + 1];
                 }
+                dp[i][j] %= MOD;
             }
         } else {
-            if (i > 0) {
-                if (value[i - 1] == 0) {
-                    i64 x = 0;
-                    if (1 <= value[i] - 1 && value[i] - 1 <= m) {
-                        x += one[value[i] - 1];
-                    }
-                    if (1 <= value[i] && value[i] <= m) {
-                        x += one[value[i]];
-                    }
-                    if (1 <= value[i] + 1 && value[i] + 1 <= m) {
-                        x += one[value[i] + 1];
-                    }
-                    if (x == 0) {
-                        cout << '0' << '\n';
-                        return;
-                    }
-                    result *= x % MOD;
-                    result %= MOD;
-                    one.clear();
-                } else {
-                    if (abs(value[i] - value[i - 1]) > 1) {
-                        cout << '0' << '\n';
-                        return;
-                    }
-                }
+            dp[i][a[i]] += dp[i - 1][a[i]];
+            if (a[i] - 1 >= 1) {
+                dp[i][a[i]] += dp[i - 1][a[i] - 1];
             }
+            if (a[i] + 1 <= m) {
+                dp[i][a[i]] += dp[i - 1][a[i] + 1];
+            }
+            dp[i][a[i]] %= MOD;
         }
     }
-    i64 x = 0;
+    i64 result = 0;
     for (i32 i = 1; i <= m; ++i) {
-        x += one[i];
-    }
-    if (x != 0) {
-        result *= x % MOD;
+        result += dp[n - 1][i];
         result %= MOD;
     }
     cout << result << '\n';
