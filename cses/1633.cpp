@@ -2,15 +2,13 @@
 
 using namespace std;
 
-typedef int32_t i32;
-
 #define MOD 1000000007
 
-i32 t, n;
+int t, n;
 
 void solve() {
     cin >> n;
-    vector<i32> dp(n + 1, MOD);
+    vector<int> dp(n + 1, MOD);
     dp[0] = 1;
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= 6; ++j) {
@@ -25,7 +23,7 @@ void solve() {
     cout << dp[n] << '\n';
 }
 
-i32 main() {
+int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     t = 1;

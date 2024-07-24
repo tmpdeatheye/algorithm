@@ -3,4 +3,4 @@ project(algorithm)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(cses cses/1639.cpp)
+add_executable(cses cses/1744.cpp)

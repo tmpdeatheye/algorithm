@@ -2,28 +2,25 @@
 
 using namespace std;
 
-typedef int32_t i32;
-typedef int64_t i64;
-
 #define MOD 1000000007
 
-i32 t, n, m;
+int t, n, m;
 
 void solve() {
     cin >> n >> m;
-    vector<i32> a(n);
-    for (i32 i = 0; i < n; ++i) {
+    vector<int> a(n);
+    for (int i = 0; i < n; ++i) {
         cin >> a[i];
     }
-    vector<vector<i64>> dp(n, vector<i64>(m + 1, 0));
+    vector<vector<long long>> dp(n, vector<long long>(m + 1, 0));
     if (a[0] == 0) {
         fill(dp[0].begin(), dp[0].end(), 1);
     } else {
         dp[0][a[0]] = 1;
     }
-    for (i32 i = 1; i < n; ++i) {
+    for (int i = 1; i < n; ++i) {
         if (a[i] == 0) {
-            for (i32 j = 1; j <= m; ++j) {
+            for (int j = 1; j <= m; ++j) {
                 dp[i][j] += dp[i - 1][j];
                 if (j - 1 >= 1) {
                     dp[i][j] += dp[i - 1][j - 1];
@@ -44,15 +41,15 @@ void solve() {
             dp[i][a[i]] %= MOD;
         }
     }
-    i64 result = 0;
-    for (i32 i = 1; i <= m; ++i) {
+    long long result = 0;
+    for (int i = 1; i <= m; ++i) {
         result += dp[n - 1][i];
         result %= MOD;
     }
     cout << result << '\n';
 }
 
-i32 main() {
+int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     t = 1;

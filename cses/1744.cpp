@@ -2,9 +2,10 @@
 
 using namespace std;
 
-int t;
+int t, a, b;
 
 void solve() {
+    cin >> a >> b;
 
 }
 
